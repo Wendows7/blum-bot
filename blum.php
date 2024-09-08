@@ -202,8 +202,8 @@ class Blum
         }
         curl_close($ch);
         $decode = json_decode($result, true);
-        var_dump($decode);
         $gameId = $decode['gameId'];
+        echo "GameID: " . $gameId;
 
         $ch1 = curl_init();
         curl_setopt($ch1, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/game/claim');

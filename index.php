@@ -39,8 +39,9 @@ class Main
             case 3:
                 $points = $blum->readInput("Enter Points: ");
                 $result = $blum->playGame($points);
-            default:
-                echo "Invalid Command";
+                echo $result;
+                // default:
+                //     echo "Invalid Command";
         }
         $this->run();
     }
