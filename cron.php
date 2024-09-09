@@ -38,7 +38,7 @@ class Main
             }
         }
         echo "\nSleeping for 12 hours\n";
-        sleep(43200);
+        sleep(28800);
         $this->__construct();
     }
 }
