@@ -10,11 +10,11 @@ class Blum
     }
 
 
-    function getAccessToken()
+    function refeshAccessToken()
     {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/auth/login');
+        curl_setopt($ch, CURLOPT_URL, 'https://user-domain.blum.codes/api/v1/auth/refresh');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
 
@@ -29,6 +29,20 @@ class Blum
         $headers[] = 'Sec-Fetch-Mode: cors';
         $headers[] = 'Sec-Fetch-Site: cross-site';
         $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+        $data = array(
+            'refresh' => $this->token
+        );
+        $dataEncode = json_encode($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataEncode);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        $decode = json_decode($result, true);
+        file_put_contents('token.txt', $decode['accessToken']);
     }
 
     function get_tasks()
@@ -42,7 +56,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization: ' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -89,7 +103,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization: ' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -126,7 +140,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization: ' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -192,7 +206,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization:' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -224,7 +238,39 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization:' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'Sec-Ch-Ua-Platform: \"macOS\"';
+        $headers[] = 'Sec-Fetch-Dest: empty';
+        $headers[] = 'Sec-Fetch-Mode: cors';
+        $headers[] = 'Sec-Fetch-Site: cross-site';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        $decode = json_decode($result, true);
+        return $result;
+    }
+
+    function claimFarming()
+    {
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/farming/claim');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        $headers[] = 'Accept: */*';
+        $headers[] = 'Accept-Language: en-US,en;q=0.9';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -256,7 +302,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization:' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -288,7 +334,7 @@ class Blum
         $headers = array();
         $headers[] = 'Accept: */*';
         $headers[] = 'Accept-Language: en-US,en;q=0.9';
-        $headers[] = 'Authorization: ' . $this->token . '';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
         $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
@@ -305,30 +351,34 @@ class Blum
         }
         curl_close($ch);
         $decode = json_decode($result, true);
-        $gameId = $decode['gameId'];
-        echo "GameID: " . $gameId;
+        if (!isset($decode['gameId'])) {
+            return "Failed Create gameID\n";
+        } else {
+            $gameId = $decode['gameId'];
+            echo "\nGameID: " . $gameId;
 
-        $ch1 = curl_init();
-        curl_setopt($ch1, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/game/claim');
-        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch1, CURLOPT_POST, 1);
-        curl_setopt($ch1, CURLOPT_HTTPHEADER, $headers);
-        // curl setop body
-        $data = array(
-            'gameId' => $gameId,
-            'points' => $points
-        );
-        $data = json_encode($data);
-        curl_setopt($ch1, CURLOPT_POSTFIELDS, $data);
-        sleep(30);
+            $ch1 = curl_init();
+            curl_setopt($ch1, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/game/claim');
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch1, CURLOPT_POST, 1);
+            curl_setopt($ch1, CURLOPT_HTTPHEADER, $headers);
+            // curl setop body
+            $data = array(
+                'gameId' => $gameId,
+                'points' => $points
+            );
+            $data = json_encode($data);
+            curl_setopt($ch1, CURLOPT_POSTFIELDS, $data);
+            sleep(30);
 
-        $result1 = curl_exec($ch1);
-        if (curl_errno($ch1)) {
-            echo 'Error:' . curl_error($ch1);
+            $result1 = curl_exec($ch1);
+            if (curl_errno($ch1)) {
+                echo 'Error:' . curl_error($ch1);
+            }
+            curl_close($ch1);
+
+            return "\nSuccess Play Game and Claim Point\n";
         }
-        curl_close($ch1);
-
-        return "\nSuccess Play Game and Claim Point\n";
     }
 
     public function readInput($message)
