@@ -30,6 +30,7 @@ class Blum
         $headers[] = 'Sec-Fetch-Site: cross-site';
         $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
     }
+
     function get_tasks()
     {
 
@@ -76,6 +77,44 @@ class Blum
             return $status_code . " Unauthorized" . PHP_EOL;
         }
     }
+
+    function checkAcount()
+    {
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/user/balance');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $headers = array();
+        $headers[] = 'Accept: */*';
+        $headers[] = 'Accept-Language: en-US,en;q=0.9';
+        $headers[] = 'Authorization: ' . $this->token . '';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'Sec-Ch-Ua-Platform: \"macOS\"';
+        $headers[] = 'Sec-Fetch-Dest: empty';
+        $headers[] = 'Sec-Fetch-Mode: cors';
+        $headers[] = 'Sec-Fetch-Site: cross-site';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        if ($status_code == 200) {
+
+            $decode = json_decode($result, true);
+            return $decode;
+        } else {
+            return $status_code . " Unauthorized" . PHP_EOL;
+        }
+    }
+
     function claim_task()
     {
 
@@ -174,6 +213,38 @@ class Blum
         return $result;
     }
 
+    function startFarming()
+    {
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/farming/start');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        $headers[] = 'Accept: */*';
+        $headers[] = 'Accept-Language: en-US,en;q=0.9';
+        $headers[] = 'Authorization:' . $this->token . '';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'Sec-Ch-Ua-Platform: \"macOS\"';
+        $headers[] = 'Sec-Fetch-Dest: empty';
+        $headers[] = 'Sec-Fetch-Mode: cors';
+        $headers[] = 'Sec-Fetch-Site: cross-site';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        $decode = json_decode($result, true);
+        return $result;
+    }
+
     public function playGame($points)
     {
         $ch = curl_init();
@@ -225,7 +296,7 @@ class Blum
         }
         curl_close($ch1);
 
-        return "Success Play Game and Claim Point";
+        return "\nSuccess Play Game and Claim Point\n";
     }
 
     public function readInput($message)

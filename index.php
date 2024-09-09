@@ -7,6 +7,17 @@ class Main
 {
     public function __construct()
     {
+        $blum = new Blum();
+        echo "Blum Bot\n";
+        echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
+        echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
+        if (isset($blum->checkAcount()["farming"])) {
+            echo "Farming Status: Started" . PHP_EOL;
+        } else {
+            echo "Farming Status: Stopped" . PHP_EOL;
+            $blum->startFarming();
+            echo "Farming Started...."  . PHP_EOL;
+        }
         $this->run();
     }
 
@@ -21,25 +32,32 @@ class Main
         switch ($command) {
             case 1:
                 $id = $blum->get_tasks();
+                // var_dump($id);
+                // die;
                 if ($id == []) {
                     echo "No Task Available" . PHP_EOL;
                 } elseif (is_string($id)) {
                     echo "401 Unauthorized, Please paste new token in token.txt" . PHP_EOL;
                 } else {
                     foreach ($id as $i) {
-                        $result = $blum->complete_task($i);
-                        echo $result;
+                        $result = $blum->complete_task($i["id"]);
+                        echo $result . "\n";
                     }
                 }
                 break;
             case 2:
                 $result = $blum->claim_task();
-                echo $result;
+                echo $result . "\n";
                 break;
             case 3:
                 $points = $blum->readInput("Enter Points: ");
-                $result = $blum->playGame($points);
-                echo $result;
+                // $points = 280;
+                $ticket = $blum->readInput("Enter Ticket: ");
+
+                for ($i = 0; $i < $ticket; $i++) {
+                    $result = $blum->playGame($points);
+                    echo $result;
+                }
                 // default:
                 //     echo "Invalid Command";
         }
