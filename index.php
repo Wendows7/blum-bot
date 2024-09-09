@@ -9,8 +9,18 @@ class Main
     {
         $blum = new Blum();
         echo "Blum Bot\n";
-        echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
-        echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
+        if (is_string($blum->checkAcount())) {
+            echo $blum->checkAcount() . PHP_EOL;
+        } else {
+            echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
+            echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
+        }
+        if ($blum->dailyCheckin()['message'] === "same day") {
+            echo "Checkin Status: Already Checkin" . PHP_EOL;
+        } else {
+            $blum->dailyCheckin();
+            echo "Checkin Status: Checkin Success" . PHP_EOL;
+        }
         if (isset($blum->checkAcount()["farming"])) {
             echo "Farming Status: Started" . PHP_EOL;
         } else {
@@ -50,9 +60,9 @@ class Main
                 echo $result . "\n";
                 break;
             case 3:
-                $points = $blum->readInput("Enter Points: ");
-                // $points = 280;
-                $ticket = $blum->readInput("Enter Ticket: ");
+                // $points = $blum->readInput("Enter Points: ");
+                $points = 280;
+                $ticket = $blum->readInput("Enter total ticket you want to use: ");
 
                 for ($i = 0; $i < $ticket; $i++) {
                     $result = $blum->playGame($points);
