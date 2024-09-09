@@ -24,9 +24,12 @@ class Main
                 echo "Checkin Status: Checkin Success" . PHP_EOL;
             }
             if (isset($blum->checkAcount()["farming"])) {
-                $blum->claimFarming();
-                echo "Farming Claimed...."  . PHP_EOL;
-                echo "Farming Status: Started" . PHP_EOL;
+                $claimFarming = $blum->claimFarming();
+                if ($claimFarming["message"] === "It's too early to claim") {
+                    echo "Farming Status: Running" . PHP_EOL;
+                } else {
+                    echo "Farming Claimed...."  . PHP_EOL;
+                }
             } else {
                 $blum->claimFarming();
                 echo "Farming Status: Stopped" . PHP_EOL;

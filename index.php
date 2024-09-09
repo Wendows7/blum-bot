@@ -8,8 +8,7 @@ class Main
     public function __construct()
     {
         $blum = new Blum();
-        // $blum->getAccessToken();
-        echo "Blum Bot\n";
+        echo "\nBlum Bot\n";
         if (is_string($blum->checkAcount())) {
             echo $blum->checkAcount() . PHP_EOL;
             echo "Generate new token" . PHP_EOL;
@@ -25,10 +24,14 @@ class Main
                 echo "Checkin Status: Checkin Success" . PHP_EOL;
             }
             if (isset($blum->checkAcount()["farming"])) {
-                echo "Farming Status: Started" . PHP_EOL;
+                $claimFarming = $blum->claimFarming();
+                if ($claimFarming["message"] === "It's too early to claim") {
+                    echo "Farming Status: Running" . PHP_EOL;
+                } else {
+                    echo "Farming Claimed...."  . PHP_EOL;
+                }
             } else {
                 $blum->claimFarming();
-                echo "Farming Claimed...."  . PHP_EOL;
                 echo "Farming Status: Stopped" . PHP_EOL;
                 $blum->startFarming();
                 echo "Farming Started...."  . PHP_EOL;
