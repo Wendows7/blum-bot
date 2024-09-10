@@ -15,7 +15,7 @@ class Main
             $blum->refeshAccessToken();
             echo "Token Refreshed" . PHP_EOL;
         }
-
+        sleep(3);
         echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
         echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
         if ($blum->dailyCheckin()['message'] === "same day") {
@@ -41,8 +41,8 @@ class Main
             echo "Farming Started...."  . PHP_EOL;
         }
 
-        echo "\nSleeping for 8 hours\n";
-        sleep(28800);
+        echo "\nSleeping for 3 hours\n";
+        sleep(10800);
         $this->__construct();
     }
 }
