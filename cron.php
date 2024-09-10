@@ -14,14 +14,14 @@ class Main
             echo "Generate new token" . PHP_EOL;
             $blum->refeshAccessToken();
             echo "Token Refreshed" . PHP_EOL;
+            sleep(5);
         }
-        sleep(3);
         echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
         echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
-        if ($blum->dailyCheckin()['message'] === "same day") {
+        $daily = $blum->dailyCheckin();
+        if ($daily['message'] === "same day") {
             echo "Checkin Status: Already Checkin" . PHP_EOL;
         } else {
-            var_dump($blum->dailyCheckin());
             echo "Checkin Status: Checkin Success" . PHP_EOL;
         }
         if (isset($blum->checkAcount()["farming"])) {

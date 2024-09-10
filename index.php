@@ -14,28 +14,31 @@ class Main
             echo "Generate new token" . PHP_EOL;
             $blum->refeshAccessToken();
             echo "Token Refreshed" . PHP_EOL;
+        }
+        sleep(3);
+        echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
+        echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
+        $daily = $blum->dailyCheckin();
+        if ($daily['message'] === "same day") {
+            echo "Checkin Status: Already Checkin" . PHP_EOL;
         } else {
-            echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
-            echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
-            if ($blum->dailyCheckin()['message'] === "same day") {
-                echo "Checkin Status: Already Checkin" . PHP_EOL;
+            echo "Checkin Status: Checkin Success" . PHP_EOL;
+        }
+        if (isset($blum->checkAcount()["farming"])) {
+            $claimFarming = $blum->claimFarming();
+            if (isset($claimFarming["message"]) && $claimFarming["message"] === "It's too early to claim") {
+                echo "Farming Status: Running" . PHP_EOL;
             } else {
-                var_dump($blum->dailyCheckin());
-                echo "Checkin Status: Checkin Success" . PHP_EOL;
-            }
-            if (isset($blum->checkAcount()["farming"])) {
-                $claimFarming = $blum->claimFarming();
-                if ($claimFarming["message"] === "It's too early to claim") {
-                    echo "Farming Status: Running" . PHP_EOL;
-                } else {
-                    echo "Farming Claimed...."  . PHP_EOL;
-                }
-            } else {
-                $blum->claimFarming();
+                echo "Farming Claimed...."  . PHP_EOL;
                 echo "Farming Status: Stopped" . PHP_EOL;
                 $blum->startFarming();
                 echo "Farming Started...."  . PHP_EOL;
             }
+        } else {
+            $blum->claimFarming();
+            echo "Farming Status: Stopped" . PHP_EOL;
+            $blum->startFarming();
+            echo "Farming Started...."  . PHP_EOL;
         }
         $this->run();
     }
