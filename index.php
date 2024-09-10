@@ -14,8 +14,8 @@ class Main
             echo "Generate new token" . PHP_EOL;
             $blum->refeshAccessToken();
             echo "Token Refreshed" . PHP_EOL;
+            sleep(5);
         }
-        sleep(3);
         echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
         echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
         $daily = $blum->dailyCheckin();
