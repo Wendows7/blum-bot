@@ -16,10 +16,13 @@ class Main
             echo "Token Refreshed" . PHP_EOL;
             sleep(5);
         }
-        echo "Total Balance: " . $blum->checkAcount()["availableBalance"] . PHP_EOL;
-        echo "Total Ticket: " . $blum->checkAcount()["playPasses"] . PHP_EOL;
+        $acount = $blum->checkAcount();
+        $balance = isset($acount['availableBalance']) ? $acount['availableBalance'] : "Fail Get Balance";
+        $ticket = isset($acount['playPasses']) ? $acount['playPasses'] : "Fail Get Ticket";
+        echo "Total Balance: " . $balance . PHP_EOL;
+        echo "Total Ticket: " . $ticket . PHP_EOL;
         $daily = $blum->dailyCheckin();
-        if ($daily['message'] === "same day") {
+        if (isset($daily['message']) && $daily['message'] === "same day") {
             echo "Checkin Status: Already Checkin" . PHP_EOL;
         } else {
             echo "Checkin Status: Checkin Success" . PHP_EOL;
