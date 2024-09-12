@@ -14,6 +14,7 @@ class Main
             echo "Generate new token" . PHP_EOL;
             $blum->refeshAccessToken();
             echo "Token Refreshed" . PHP_EOL;
+            $this->__construct();
         } else {
             $acount = $blum->checkAcount();
             $balance = isset($acount['availableBalance']) ? $acount['availableBalance'] : "Fail Get Balance";
@@ -42,10 +43,10 @@ class Main
                 $blum->startFarming();
                 echo "Farming Started...."  . PHP_EOL;
             }
-        }
 
-        echo "\nSleeping for 3 hours\n";
-        sleep(10800);
-        $this->__construct();
+            echo "\nSleeping for 3 hours\n";
+            sleep(10800);
+            $this->__construct();
+        }
     }
 }
