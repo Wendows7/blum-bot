@@ -53,7 +53,7 @@ class Blum
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/tasks');
+        curl_setopt($ch, CURLOPT_URL, 'https://earn-domain.blum.codes/api/v1/tasks');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $headers = array();
@@ -79,13 +79,25 @@ class Blum
         if ($status_code == 200) {
 
             $decode = json_decode($result, true);
-            $tasks = $decode[0]["subSections"];
-            // var_dump($tasks);
+            $tasks = $decode;
+
             $id = [];
-            foreach ($tasks as $task) {
-                foreach ($task["tasks"] as $t) {
-                    if ($t['status'] !== "FINISHED" && $t['status'] !== "READY_FOR_CLAIM" && $t['status'] !== "STARTED" && $t['kind'] !== "ONGOING") {
-                        $id[] = $t;
+            foreach ($tasks as $allTasks) {
+                if ($allTasks['tasks'] !== [] && $allTasks['subSections'] == []) {
+                    foreach ($allTasks['tasks'] as $task) {
+                        foreach ($task['subTasks'] as $subTask) {
+                            if ($subTask['status'] !== "FINISHED" && $subTask['status'] !== "READY_FOR_CLAIM" && $subTask['status'] !== "STARTED" && $subTask['kind'] !== "ONGOING") {
+                                $id[] = $subTask;
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($allTasks['subSections'] as $subSection) {
+                        foreach ($subSection['tasks'] as $task) {
+                            if ($task['status'] !== "FINISHED" && $task['status'] !== "READY_FOR_CLAIM" && $task['status'] !== "STARTED" && $task['kind'] !== "ONGOING") {
+                                $id[] = $task;
+                            }
+                        }
                     }
                 }
             }
@@ -136,7 +148,7 @@ class Blum
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/tasks');
+        curl_setopt($ch, CURLOPT_URL, 'https://earn-domain.blum.codes/api/v1/tasks');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 
@@ -167,13 +179,25 @@ class Blum
         if ($status_code == 200) {
 
             $decode = json_decode($result, true);
-            $tasks = $decode[0]["subSections"];
+            $tasks = $decode;
             // var_dump($tasks);
             $id = [];
-            foreach ($tasks as $task) {
-                foreach ($task["tasks"] as $t) {
-                    if ($t['status'] == "READY_FOR_CLAIM") {
-                        $id[] = $t;
+            foreach ($tasks as $allTasks) {
+                if ($allTasks['tasks'] !== [] && $allTasks['subSections'] == []) {
+                    foreach ($allTasks['tasks'] as $task) {
+                        foreach ($task['subTasks'] as $subTask) {
+                            if ($subTask['status'] == "READY_FOR_CLAIM") {
+                                $id[] = $subTask;
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($allTasks['subSections'] as $subSection) {
+                        foreach ($subSection['tasks'] as $task) {
+                            if ($task['status'] == "READY_FOR_CLAIM") {
+                                $id[] = $task;
+                            }
+                        }
                     }
                 }
             }
@@ -181,7 +205,7 @@ class Blum
                 return "No Claimable Task Available" . PHP_EOL;
             } else {
                 foreach ($id as $i) {
-                    curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/tasks/' . $i["id"] . '/claim');
+                    curl_setopt($ch, CURLOPT_URL, 'https://earn-domain.blum.codes/api/v1/tasks/' . $i["id"] . '/claim');
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     curl_setopt($ch, CURLOPT_POST, 1);
 
@@ -202,7 +226,7 @@ class Blum
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/tasks/' . $id . '/start');
+        curl_setopt($ch, CURLOPT_URL, 'https://earn-domain.blum.codes/api/v1/tasks/' . $id . '/start');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
 
