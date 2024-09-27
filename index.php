@@ -76,7 +76,7 @@ class Main
                 break;
             case 3:
                 // $points = $blum->readInput("Enter Points: ");
-                $points = 280;
+                $points = random_int(240, 280);
                 $ticket = $blum->readInput("Enter total ticket you want to use: ");
 
                 for ($i = 0; $i < $ticket; $i++) {

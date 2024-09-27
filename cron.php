@@ -44,8 +44,8 @@ class Main
                 echo "Farming Started...."  . PHP_EOL;
             }
 
-            echo "\nSleeping for 3 hours\n";
-            sleep(10800);
+            echo "\nSleeping for 7 hours\n";
+            sleep(25200);
             $this->__construct();
         }
     }
