@@ -44,6 +44,16 @@ class Main
                 echo "Farming Started...."  . PHP_EOL;
             }
 
+            if ($ticket > 0) {
+                $points = random_int(240, 280);
+
+                for ($i = 0; $i < $ticket; $i++) {
+                    $result = $blum->playGame($points);
+                    echo $result;
+                    sleep(5);
+                }
+            }
+
             echo "\nSleeping for 7 hours\n";
             sleep(25200);
             $this->__construct();
