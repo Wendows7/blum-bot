@@ -354,7 +354,7 @@ class Blum
     {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/game/play');
+        curl_setopt($ch, CURLOPT_URL, 'https://game-domain.blum.codes/api/v2/game/play');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
 
@@ -384,8 +384,17 @@ class Blum
             $gameId = $decode['gameId'];
             echo "\nGameID: " . $gameId;
 
+            $payload = $this->createPayload($gameId, $points, 1);
+            if (is_object(json_decode($payload))) {
+                echo "\nSuccess Create Payload\n";
+            } else {
+                echo "\nFailed Create Payload\n";
+                $payload = $this->createPayload($gameId, $points, 1);
+            }
+
+
             $ch1 = curl_init();
-            curl_setopt($ch1, CURLOPT_URL, 'https://game-domain.blum.codes/api/v1/game/claim');
+            curl_setopt($ch1, CURLOPT_URL, 'https://game-domain.blum.codes/api/v2/game/claim');
             curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch1, CURLOPT_POST, 1);
             curl_setopt($ch1, CURLOPT_HTTPHEADER, $headers);
@@ -395,7 +404,7 @@ class Blum
                 'points' => $points
             );
             $data = json_encode($data);
-            curl_setopt($ch1, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch1, CURLOPT_POSTFIELDS, $payload);
             sleep(30);
 
             $result1 = curl_exec($ch1);
@@ -406,6 +415,69 @@ class Blum
 
             return "\nSuccess Play Game and Claim Point\n";
         }
+    }
+
+    public function createPayload($gameId, $points, $dogs)
+    {
+        $data = [
+            'game_id' => $gameId,
+            'points' => $points,
+            'dogs' => $dogs,
+        ];
+
+        $dataGame = json_encode($data, true);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://raw.githubusercontent.com/zuydd/database/main/blum.json');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        $dataDecode = json_decode($result, true);
+
+        $urlServer = [];
+
+        foreach ($dataDecode['payloadServer'] as $data) {
+            if ($data['status'] == 1) {
+                $urlServer[] = $data;
+            }
+        }
+
+        $getKey = array_keys($urlServer);
+        $lastKey = end($getKey);
+        $lastId = $urlServer[$lastKey]['id'];
+
+
+        $ch2 = curl_init();
+        $url = "https://" . $lastId . ".vercel.app/api/blum";
+        $headers = array();
+        $headers[] = 'Accept: */*';
+        $headers[] = 'Accept-Language: en-US,en;q=0.9';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'Sec-Ch-Ua-Platform: \"macOS\"';
+        $headers[] = 'Sec-Fetch-Dest: empty';
+        $headers[] = 'Sec-Fetch-Mode: cors';
+        $headers[] = 'Sec-Fetch-Site: cross-site';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36';
+        curl_setopt($ch2, CURLOPT_URL, $url);
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch2, CURLOPT_POST, 1);
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch2, CURLOPT_POSTFIELDS, $dataGame);
+
+        $payload = curl_exec($ch2);
+
+        if (curl_errno($ch2)) {
+            echo 'Error:' . curl_error($ch2);
+        }
+        curl_close($ch2);
+        return $payload;
     }
 
     public function readInput($message)
