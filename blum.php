@@ -135,9 +135,32 @@ class Blum
             echo 'Error:' . curl_error($ch);
         }
         curl_close($ch);
+
+        $ch1 = curl_init();
+
+        curl_setopt($ch1, CURLOPT_URL, 'https://user-domain.blum.codes/api/v1/user/me');
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+
+        $headers = array();
+        $headers[] = 'Accept: */*';
+        $headers[] = 'Accept-Language: en-US,en;q=0.9';
+        $headers[] = 'Authorization: Bearer ' . $this->token . '';
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Sec-Ch-Ua: \"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'Sec-Ch-Ua-Platform: \"macOS\"';
+        $headers[] = 'Sec-Fetch-Dest: empty';
+        $headers[] = 'Sec-Fetch-Mode: cors';
+        $headers[] = 'Sec-Fetch-Site: cross-site';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+        curl_setopt($ch1, CURLOPT_HTTPHEADER, $headers);
+
+        $result1 = curl_exec($ch1);
+        curl_close($ch1);
+        $resul1 = json_decode($result1, true);
         if ($status_code == 200) {
             $decode = json_decode($result, true);
-            return $decode;
+            return [$decode, $resul1];
         } else {
             return $status_code . " Unauthorized" . PHP_EOL;
         }
