@@ -17,8 +17,10 @@ class Main
             $this->__construct();
         } else {
             $acount = $blum->checkAcount();
-            $balance = isset($acount['availableBalance']) ? $acount['availableBalance'] : "Fail Get Balance";
-            $ticket = isset($acount['playPasses']) ? $acount['playPasses'] : "Fail Get Ticket";
+            $username = isset($acount[1]['username']) ? $acount[1]['username'] : "Fail Get Username";
+            $balance = isset($acount[0]['availableBalance']) ? $acount[0]['availableBalance'] : "Fail Get Balance";
+            $ticket = isset($acount[0]['playPasses']) ? $acount[0]['playPasses'] : "Fail Get Ticket";
+            echo "Username: " . $username . PHP_EOL;
             echo "Total Balance: " . $balance . PHP_EOL;
             echo "Total Ticket: " . $ticket . PHP_EOL;
             $daily = $blum->dailyCheckin();
